@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+echo_info() {
+  echo "INFO: $@"
+}
+
+echo_info "Stopping compose services"
+if command -v docker-compose > /dev/null 2>&1; then
+  docker-compose down
+else
+  docker compose down
+fi
+
+CONTAINERS="$(docker ps -qa)"
+
+if [ "$(echo "$CONTAINERS" | wc -l)" -gt 0 ]; then
+  echo_info "Removing all containers"
+  docker rm -v -f $CONTAINERS 2> /dev/null
+else
+  echo_info "No containers to remove, skipping"
+fi
+
+IMAGES="$(docker images -aq)"
+
+if [ "$(echo "$IMAGES" | wc -l)" -gt 0 ]; then
+  echo_info "Removing all images"
+  docker rmi -f $IMAGES
+else
+  echo_info "No images to remove, skipping"
+fi
+
+echo_info "Network prune"
+docker network prune -f
+
+echo_info "System prune"
+docker system prune -f
