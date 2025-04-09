@@ -34,3 +34,6 @@ docker network prune -f
 
 echo_info "System prune"
 docker system prune -f
+
+echo_info "Volume prune"
+docker volume prune -f
