@@ -22,7 +22,7 @@ fi
 
 IMAGES="$(docker images -aq)"
 
-if [ "$(echo "$IMAGES" | wc -l)" -gt 0 ]; then
+if [ "$IMAGES" != "" ] && [ "$(echo "$IMAGES" | wc -l)" -gt 0 ]; then
   echo_info "Removing all images"
   docker rmi -f $IMAGES
 else
